@@ -118,8 +118,29 @@
       padding: 0 24px;
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 24px;
+      gap: 32px;
     }
+
+    .category-title {
+      grid-column: 1 / -1;
+      font-family: 'Outfit', sans-serif;
+      font-size: 32px;
+      font-weight: 900;
+      color: #fff;
+      margin: 80px 0 32px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+      position: relative;
+    }
+
+    .category-title::after {
+      content: '';
+      position: absolute;
+      bottom: -1px; left: 0; width: 60px; height: 3px;
+      background: var(--accent);
+    }
+
+    .category-title:first-child { margin-top: 0; }
 
     .archive-card {
       background: var(--card);
@@ -259,21 +280,36 @@
 
     function renderGrid(data) {
       archiveGrid.innerHTML = '';
-      data.forEach(item => {
-        const card = document.createElement('a');
-        card.className = 'archive-card';
-        card.href = `./archive/${item.slug}.html`;
-        
-        // Extract some tags from metadata if exists
-        const tagsHtml = item.metadata.tags ? 
-          item.metadata.tags.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('') :
-          `<span class="tag">Clinical</span><span class="tag">Insight</span>`;
+      
+      // Group by category
+      const categories = ["🧠 脳科学・神経系", "💪 筋骨格・解剖学", "⚖️ 心理・社会医学", "🔬 臨床手技・評価"];
+      
+      categories.forEach(cat => {
+        const catData = data.filter(d => d.category === cat);
+        if (catData.length === 0) return;
 
-        card.innerHTML = `
-          <div class="card-title">${item.title}</div>
-          <div class="card-tags">${tagsHtml}</div>
-        `;
-        archiveGrid.appendChild(card);
+        // Add Category Heading
+        const heading = document.createElement('h2');
+        heading.className = 'category-title';
+        heading.innerHTML = cat;
+        archiveGrid.appendChild(heading);
+
+        // Add Cards for this category
+        catData.forEach(item => {
+          const card = document.createElement('a');
+          card.className = 'archive-card';
+          card.href = `./archive/${item.slug}.html`;
+          
+          const tagsHtml = item.metadata.tags ? 
+            item.metadata.tags.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('') :
+            `<span class="tag">Clinical</span>`;
+
+          card.innerHTML = `
+            <div class="card-title">${item.title}</div>
+            <div class="card-tags">${tagsHtml}</div>
+          `;
+          archiveGrid.appendChild(card);
+        });
       });
     }
 
