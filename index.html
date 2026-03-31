@@ -3,349 +3,291 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>臨床アーカイブ辞書 | M.O.C.H.I. LABO</title>
+  <title>臨床アーカイブ | M.O.C.H.I. LABO -  Sociology of Relaxation</title>
   
-  <!-- SEO & OGP -->
-  <meta name="description" content="臨床家・もちスラによる 15 年の知見。28 項目の専門用語を検索・閲覧可能なデジタルアーカイブです。">
-  <meta property="og:title" content="🔬 臨床アーカイブ辞書 | M.O.C.H.I. LABO">
-  <meta property="og:description" content="28 項目の臨床知見を高速検索。臨床の武器としてご活用ください。">
-  <meta property="og:image" content="https://raw.githubusercontent.com/YayanV/Mochi-Labo/main/rich_menu_upload.jpg">
-  <meta name="twitter:card" content="summary_large_image">
-
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;800&family=Outfit:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700;900&family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
   
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-
   <style>
     :root {
       --bg: #010409;
-      --sidebar: #0d1117;
-      --card: #161b22;
+      --surface: #0d1117;
+      --card: rgba(22, 27, 34, 0.4);
       --accent: #06C755;
       --text: #e6edf3;
       --muted: #8b949e;
-      --border: #30363d;
-      --glass: rgba(13, 17, 23, 0.7);
+      --border: rgba(48, 54, 61, 0.5);
+      --glass: rgba(1, 4, 9, 0.8);
     }
 
-    * { margin: 0; padding: 0; box-sizing: border-box; }
+    * { margin:0; padding:0; box-sizing:border-box; }
     body {
-      font-family: 'Inter', -apple-system, system-ui, sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       background-color: var(--bg);
       color: var(--text);
-      display: flex;
-      height: 100vh;
-      overflow: hidden;
+      overflow-x: hidden;
+      line-height: 1.5;
     }
 
-    /* Sidebar Layout */
-    .sidebar {
-      width: 320px;
-      background: var(--sidebar);
-      border-right: 1px solid var(--border);
-      display: flex;
-      flex-direction: column;
-      flex-shrink: 0;
-      transition: transform 0.3s ease;
+    /* Animated background */
+    .bg-mesh {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at 50% 50%, #0d1117 0%, #010409 100%);
+      z-index: -1;
+    }
+    .bg-glow {
+      position: fixed;
+      top: -20%; left: -10%; width: 60%; height: 60%;
+      background: radial-gradient(circle, rgba(6, 199, 85, 0.05) 0%, transparent 70%);
+      filter: blur(100px);
+      z-index: -1;
     }
 
-    .sidebar-header {
-      padding: 24px;
-      border-bottom: 1px solid var(--border);
+    /* Hero Section */
+    .hero {
+      padding: 120px 24px 80px;
+      text-align: center;
+      max-width: 1000px;
+      margin: 0 auto;
     }
 
-    .brand {
-      font-family: 'Outfit', sans-serif;
-      font-size: 20px;
-      font-weight: 800;
+    .badge-premium {
+      display: inline-block;
+      padding: 6px 16px;
+      background: rgba(6, 199, 85, 0.1);
+      border: 1px solid var(--accent);
+      border-radius: 100px;
       color: var(--accent);
-      margin-bottom: 16px;
-      display: block;
-      text-decoration: none;
+      font-weight: 800;
+      font-size: 12px;
+      letter-spacing: 2px;
+      margin-bottom: 24px;
+      text-transform: uppercase;
     }
 
-    .search-container {
+    .hero h1 {
+      font-family: 'Outfit', sans-serif;
+      font-size: 72px;
+      font-weight: 900;
+      letter-spacing: -2px;
+      line-height: 1.0;
+      margin-bottom: 32px;
+      color: #fff;
+    }
+
+    .hero p {
+      font-size: 20px;
+      color: var(--muted);
+      max-width: 700px;
+      margin: 0 auto 48px;
+    }
+
+    /* Search Bar */
+    .search-wrapper {
+      max-width: 600px;
+      margin: 0 auto;
       position: relative;
     }
 
     .search-input {
       width: 100%;
-      background: rgba(255,255,255,0.05);
+      padding: 20px 24px;
+      background: var(--card);
       border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 12px 16px;
+      border-radius: 100px;
       color: #fff;
-      font-size: 14px;
+      font-size: 18px;
+      backdrop-filter: blur(20px);
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
       outline: none;
-      transition: border-color 0.2s;
     }
 
     .search-input:focus {
       border-color: var(--accent);
-      background: rgba(255,255,255,0.08);
+      box-shadow: 0 0 30px rgba(6, 199, 85, 0.15);
+      background: rgba(22, 27, 34, 0.8);
     }
 
-    .term-list {
-      flex: 1;
-      overflow-y: auto;
-      padding: 12px;
+    /* Archive Grid */
+    .grid-container {
+      max-width: 1200px;
+      margin: 80px auto 160px;
+      padding: 0 24px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
     }
 
-    .term-item {
-      padding: 12px 16px;
-      border-radius: 10px;
-      cursor: pointer;
-      margin-bottom: 4px;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.2s;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .term-item:hover {
-      background: rgba(255,255,255,0.05);
-      color: var(--accent);
-    }
-
-    .term-item.active {
-      background: rgba(6, 199, 85, 0.1);
-      color: var(--accent);
-      font-weight: 700;
-    }
-
-    /* Main Content Area */
-    .main-content {
-      flex: 1;
+    .archive-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      text-decoration: none;
+      color: inherit;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      backdrop-filter: blur(10px);
       display: flex;
       flex-direction: column;
-      overflow: hidden;
       position: relative;
+      overflow: hidden;
     }
 
-    .main-header {
-      padding: 16px 40px;
-      background: var(--glass);
-      backdrop-filter: blur(12px);
-      border-bottom: 1px solid var(--border);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 5;
+    .archive-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 3px;
+      background: var(--accent);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s;
     }
 
-    .article-container {
-      flex: 1;
-      overflow-y: auto;
-      padding: 60px 40px 120px;
-      display: flex;
-      justify-content: center;
+    .archive-card:hover {
+      transform: translateY(-8px);
+      border-color: var(--accent);
+      background: rgba(48, 54, 61, 0.3);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
     }
 
-    .article-card {
-      max-width: 720px;
-      width: 100%;
+    .archive-card:hover::before {
+      transform: scaleX(1);
     }
 
-    .article-header {
-      margin-bottom: 48px;
-    }
-
-    .category-badge {
-      display: inline-block;
-      padding: 4px 10px;
-      background: rgba(6, 199, 85, 0.1);
-      border: 1px solid rgba(6, 199, 85, 0.2);
-      border-radius: 100px;
-      color: var(--accent);
-      font-size: 11px;
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    .article-title {
+    .card-title {
       font-family: 'Outfit', sans-serif;
-      font-size: 40px;
-      font-weight: 800;
-      line-height: 1.1;
-      color: #fff;
-    }
-
-    /* Markdown Styles */
-    .content-body h2 { font-size: 24px; margin: 40px 0 16px; color: var(--accent); border-bottom: 1px solid var(--border); padding-bottom: 8px; }
-    .content-body p { margin-bottom: 20px; }
-    .content-body strong { color: #fff; }
-    .content-body ul { margin-left: 20px; margin-bottom: 24px; }
-    .content-body li { margin-bottom: 8px; }
-    .content-body blockquote {
-      border-left: 4px solid var(--accent);
-      padding: 12px 24px;
-      background: rgba(255,255,255,0.03);
-      margin: 24px 0;
-      font-style: italic;
-      color: var(--muted);
-    }
-
-    .placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      height: 100%;
-      text-align: center;
-      color: var(--muted);
-    }
-
-    .mobile-menu-btn {
-      display: none;
-      background: none;
-      border: none;
-      color: #fff;
       font-size: 24px;
-      cursor: pointer;
+      font-weight: 800;
+      color: #fff;
+      margin-bottom: 12px;
+    }
+
+    .card-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .tag {
+      font-size: 10px;
+      color: var(--muted);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      text-transform: uppercase;
+    }
+
+    /* Footer / CTA */
+    .footer {
+      padding: 120px 24px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .cta-button {
+      display: inline-block;
+      padding: 20px 48px;
+      background: var(--accent);
+      color: #000;
+      text-decoration: none;
+      font-weight: 900;
+      border-radius: 100px;
+      font-size: 18px;
+      transition: transform 0.2s;
+    }
+
+    .cta-button:hover {
+      transform: scale(1.05);
     }
 
     @media (max-width: 768px) {
-      .sidebar {
-        position: absolute;
-        left: -320px;
-        z-index: 100;
-        height: 100%;
-      }
-      .sidebar.open {
-        left: 0;
-      }
-      .mobile-menu-btn {
-        display: block;
-      }
-      .main-header {
-        padding: 16px 20px;
-      }
-      .article-container {
-        padding: 40px 20px;
-      }
-      .article-title {
-        font-size: 32px;
-      }
+      .hero h1 { font-size: 48px; }
+      .grid-container { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body>
 
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <a href="/" class="brand">M.O.C.H.I. LABO</a>
-      <div class="search-container">
-        <input type="text" class="search-input" id="search-input" placeholder="用語を検索...">
-      </div>
-    </div>
-    <div class="term-list" id="term-list">
-      <!-- List items injected here -->
-    </div>
-  </aside>
+  <div class="bg-mesh"></div>
+  <div class="bg-glow"></div>
 
-  <main class="main-content">
-    <header class="main-header">
-      <button class="mobile-menu-btn" id="menu-btn">≡</button>
-      <div id="header-title" style="font-weight: 700; color: var(--accent);">Archives</div>
-      <div style="font-size: 12px; color: var(--muted);">2026 Edition</div>
-    </header>
+  <section class="hero">
+    <div class="badge-premium">Science x Sociology</div>
+    <h1>Archives of<br>Clinical Wisdom</h1>
+    <p>
+      臨床家「もちスラ」による、15 年の現場経験と科学的エビデンスの結晶。<br>
+      28 項目の専門用語を通じて、心身のメカニズムを深く解凍します。
+    </p>
+    
+    <div class="search-wrapper">
+      <input type="text" id="search-input" class="search-input" placeholder="用語、キーワード、効果で検索...">
+    </div>
+  </section>
 
-    <section class="article-container" id="article-container">
-      <!-- Article injected here -->
-      <div class="placeholder">
-        <h2 style="font-size: 24px; margin-bottom: 8px;">🔬 臨床辞典 A-Z</h2>
-        <p>調べたい用語を検索、または左のリストから選択してください</p>
-      </div>
-    </section>
-  </main>
+  <div class="grid-container" id="archive-grid">
+    <!-- Cards will be injected here -->
+  </div>
+
+  <footer class="footer">
+    <h2 style="font-family: 'Outfit'; font-size: 32px; margin-bottom: 24px;">Deepen Your Practice.</h2>
+    <p style="color: var(--muted); margin-bottom: 48px;">最新の市場レポート、限定アーカイブ、コミュニティへのアクセスは LINE から。</p>
+    <a href="https://note.com/mochisuranote/membership" class="cta-button">Join M.O.C.H.I. LABO</a>
+    <div style="margin-top: 80px; color: var(--border); font-size: 12px; letter-spacing: 2px; text-transform: uppercase;">
+      &copy; 2026 Sociology of Relaxation | M.O.C.H.I. LABO
+    </div>
+  </footer>
 
   <script>
-    let glossaryData = [];
+    let archiveData = [];
     const searchInput = document.getElementById('search-input');
-    const termList = document.getElementById('term-list');
-    const articleContainer = document.getElementById('article-container');
-    const sidebar = document.getElementById('sidebar');
-    const menuBtn = document.getElementById('menu-btn');
+    const archiveGrid = document.getElementById('archive-grid');
 
-    // Load Data
-    async function init() {
+    async function loadData() {
       try {
         const response = await fetch('./glossary_db.json');
-        glossaryData = await response.json();
-        glossaryData.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
-        renderList(glossaryData);
-        
-        // Handle direct links
-        const hash = window.location.hash.slice(1);
-        if (hash) {
-          const item = glossaryData.find(d => d.slug === hash);
-          if (item) renderArticle(item);
-        }
+        archiveData = await response.json();
+        archiveData.sort((a, b) => a.title.localeCompare(b.title, 'ja'));
+        renderGrid(archiveData);
       } catch (err) {
-        console.error('Failed to load glossary data:', err);
+        console.error('Failed to load archives:', err);
       }
     }
 
-    function renderList(data) {
-      termList.innerHTML = '';
+    function renderGrid(data) {
+      archiveGrid.innerHTML = '';
       data.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'term-item';
-        div.textContent = item.title;
-        div.onclick = () => {
-          renderArticle(item);
-          if (window.innerWidth <= 768) sidebar.classList.remove('open');
-        };
-        termList.appendChild(div);
+        const card = document.createElement('a');
+        card.className = 'archive-card';
+        card.href = `./archive/${item.title}.html`;
+        
+        // Extract some tags from metadata if exists
+        const tagsHtml = item.metadata.tags ? 
+          item.metadata.tags.slice(0, 3).map(t => `<span class="tag">${t}</span>`).join('') :
+          `<span class="tag">Clinical</span><span class="tag">Insight</span>`;
+
+        card.innerHTML = `
+          <div class="card-title">${item.title}</div>
+          <div class="card-tags">${tagsHtml}</div>
+        `;
+        archiveGrid.appendChild(card);
       });
     }
 
-    async function renderArticle(item) {
-      // Update UI active state
-      document.querySelectorAll('.term-item').forEach(el => {
-        el.classList.toggle('active', el.textContent === item.title);
-      });
-
-      // Update URL
-      window.location.hash = item.slug;
-
-      const html = `
-        <div class="article-card">
-          <div class="article-header">
-            <span class="category-badge">Clinical Archive</span>
-            <h1 class="article-title">${item.title}</h1>
-          </div>
-          <div class="content-body">
-            ${marked.parse(item.content)}
-          </div>
-        </div>
-      `;
-      articleContainer.innerHTML = html;
-      articleContainer.scrollTop = 0;
-    }
-
-    // Search Logic
     searchInput.oninput = (e) => {
       const val = e.target.value.toLowerCase();
-      const filtered = glossaryData.filter(d => 
+      const filtered = archiveData.filter(d => 
         d.title.toLowerCase().includes(val) || 
         d.content.toLowerCase().includes(val) ||
         (d.metadata.aliases && d.metadata.aliases.some(a => a.toLowerCase().includes(val)))
       );
-      renderList(filtered);
+      renderGrid(filtered);
     };
 
-    // Mobile Menu
-    menuBtn.onclick = () => sidebar.classList.toggle('open');
-
-    init();
+    loadData();
   </script>
 </body>
 </html>
