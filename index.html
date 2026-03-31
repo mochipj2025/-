@@ -262,7 +262,7 @@
       data.forEach(item => {
         const card = document.createElement('a');
         card.className = 'archive-card';
-        card.href = `./archive/${item.title}.html`;
+        card.href = `./archive/${item.slug}.html`;
         
         // Extract some tags from metadata if exists
         const tagsHtml = item.metadata.tags ? 
